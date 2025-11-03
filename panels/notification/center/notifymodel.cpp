@@ -77,6 +77,7 @@ void NotifyModel::expandApp(int row)
         for (int i = 0; i < notifies.size(); i++) {
             auto item = notifies[i];
             m_appNotifies.insert(start + i, item);
+            item->setIndexInGroup(i);
         }
         endInsertRows();
     }
@@ -724,7 +725,10 @@ QVariant NotifyModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == NotifyRole::NotifyContentRowCount) {
         return NotifySetting::instance()->contentRowCount();
+    } else if (role == NotifyRole::NotifyIndexInGroup) {
+        return notify->indexInGroup();
     }
+
     return QVariant::fromValue(notify);
 }
 
@@ -778,7 +782,8 @@ QHash<int, QByteArray> NotifyModel::roleNames() const
                                               {NotifyStrongInteractive, "strongInteractive"},
                                               {NotifyContentIcon, "contentIcon"},
                                               {NotifyOverlapCount, "overlapCount"},
-                                              {NotifyContentRowCount, "contentRowCount"}};
+                                              {NotifyContentRowCount, "contentRowCount"},
+                                              {NotifyIndexInGroup, "indexInGroup"}};
     return roles;
 }
 

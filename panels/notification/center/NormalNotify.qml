@@ -26,8 +26,8 @@ NotifyItem {
     transitions: Transition {
         to: "removing"
         ParallelAnimation {
-            NumberAnimation { properties: "x"; duration: 300; easing.type: Easing.Linear }
-            NumberAnimation { properties: "opacity"; duration: 300; easing.type: Easing.Linear }
+            // NumberAnimation { properties: "x"; duration: 300; easing.type: Easing.Linear }
+            // NumberAnimation { properties: "opacity"; duration: 300; easing.type: Easing.Linear }
         }
         onRunningChanged: {
             if (!running && root.removedCallback) {
@@ -54,18 +54,13 @@ NotifyItem {
             strongInteractive: root.strongInteractive
             contentIcon: root.contentIcon
             contentRowCount: root.contentRowCount
+            indexInGroup: root.indexInGroup
 
             onRemove: function () {
-                root.removedCallback = function () {
-                    root.remove()
-                }
-                root.state = "removing"
+                root.remove()
             }
             onDismiss: function () {
-                root.removedCallback = function () {
-                    root.dismiss()
-                }
-                root.state = "removing"
+                root.dismiss()
             }
             onActionInvoked: function (actionId) {
                 root.actionInvoked(actionId)

@@ -40,6 +40,30 @@ Item {
                         topMargin: revert ? undefined : -(height - overlapHeight)
                         bottomMargin: revert ? -(height - overlapHeight) : undefined
                     }
+                    opacity: 0
+
+                    Component.onCompleted: {
+                        fadeInAnimation.start()
+                    }
+
+                    SequentialAnimation {
+                        id: fadeInAnimation
+
+                        PauseAnimation {
+                            duration: realIndex * 100
+                        }
+
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: background
+                                property: "opacity"
+                                from: 0
+                                to: 1
+                                duration: 300
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+                    }
                 }
             }
         }

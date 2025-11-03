@@ -66,16 +66,10 @@ NotifyItem {
                 contentRowCount: root.contentRowCount
                 enableDismissed: root.enableDismissed
                 onRemove: function () {
-                    root.removedCallback = function () {
-                        root.remove()
-                    }
-                    root.state = "removing"
+                    root.remove()
                 }
                 onDismiss: function () {
-                    root.removedCallback = function () {
-                        root.dismiss()
-                    }
-                    root.state = "removing"
+                    root.dismiss()
                 }
                 onActionInvoked: function (actionId) {
                     root.actionInvoked(actionId)

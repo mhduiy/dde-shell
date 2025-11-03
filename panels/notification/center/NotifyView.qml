@@ -52,26 +52,132 @@ Control {
                 notifySetting.toggle();
             }
         }
-        // remove: Transition {
-        //     ParallelAnimation {
-        //         NumberAnimation { properties: "y"; duration: 300 }
-        //     }
-        // }
-        // add: Transition {
-        //     ParallelAnimation {
-        //         NumberAnimation { properties: "y"; duration: 300 }
-        //     }
-        // }
-        // addDisplaced: Transition {
-        //     ParallelAnimation {
-        //         NumberAnimation { properties: "y"; duration: 300 }
-        //     }
-        // }
-        // moveDisplaced: Transition {
-        //     ParallelAnimation {
-        //         NumberAnimation { properties: "y"; duration: 300 }
-        //     }
-        // }
+        add: Transition {
+            id: addTrans
+            ScriptAction {
+                script: {
+                    let item = addTrans.ViewTransition.item
+                    if (item)
+                        console.warn("新增动画开始:", addTrans.ViewTransition.item.height, addTrans.ViewTransition.item.implicitHeight, item.indexInGroup === 0, item.objectName.startsWith("overlap-"))
+                }
+            }
+
+            NumberAnimation { 
+                properties: "y"
+                from: {
+                    if (addTrans.ViewTransition.item.objectName.startsWith("overlap-")) {
+                        return addTrans.ViewTransition.destination.y + view.spacing + 24
+                    } else if (addTrans.ViewTransition.item.indexInGroup === 0) {
+                        return addTrans.ViewTransition.destination.y - view.spacing - 24 // 24: overlap height
+                    } else {
+                        return addTrans.ViewTransition.destination.y
+                    }
+                }
+                duration: 400
+                easing.type: Easing.OutQuart
+            }
+            NumberAnimation {
+                property: "opacity";
+                from: {
+                    if (addTrans.ViewTransition.item.objectName.startsWith("overlap-")) {
+                        return 0
+                    } else if (addTrans.ViewTransition.item.indexInGroup === 0) {
+                        return 1
+                    } else {
+                        return 0
+                    }
+                }
+                to: 1
+                duration: {
+                    if (addTrans.ViewTransition.item.objectName.startsWith("overlap-")) {
+                        return 0
+                    } else if (addTrans.ViewTransition.item.indexInGroup === 0) {
+                        return 100
+                    } else {
+                        return 600
+                    }
+                }
+                easing.type: Easing.OutExpo
+            }
+        }
+
+        remove: Transition {
+            id: removeTrans
+            ScriptAction {
+                script: {
+                    let item = removeTrans.ViewTransition.item
+                    if (item)
+                        console.warn("删除动画开始:", item.indexInGroup === 0, item.objectName.startsWith("overlap-"))
+                }
+            }
+            NumberAnimation {
+                properties: "y"
+                to: {
+                    if (removeTrans.ViewTransition.item.objectName.startsWith("overlap-")) {
+                        return removeTrans.ViewTransition.destination.y + view.spacing + 24
+                    } else if (removeTrans.ViewTransition.item.indexInGroup === 1) {
+                        return removeTrans.ViewTransition.destination.y - view.spacing - 24
+                    } else if (removeTrans.ViewTransition.item.indexInGroup === 2) {
+                        return removeTrans.ViewTransition.destination.y - view.spacing - 24
+                    } else {
+                        return removeTrans.ViewTransition.destination.y
+                    }
+                }
+                duration: 400
+                easing.type: Easing.OutQuart
+            }
+
+            NumberAnimation {
+                property: "scale";
+                from: 1
+                to: {
+                    if (removeTrans.ViewTransition.item.indexInGroup === 1) {
+                        return 0.9
+                    } else if (removeTrans.ViewTransition.item.indexInGroup === 2) {
+                        return 0.9
+                    } else {
+                        return 1
+                    }
+                }
+                duration: 600
+                easing.type: Easing.OutExpo
+            }
+
+            NumberAnimation {
+                property: "opacity";
+                to: {
+                    if (removeTrans.ViewTransition.item.indexInGroup === 0) {
+                        return 0
+                    } else {
+                        return 0
+                    }
+                }
+                duration: {
+                    if (removeTrans.ViewTransition.item.indexInGroup === 0) {
+                        return 0
+                    } else if (removeTrans.ViewTransition.item.objectName.startsWith("overlap-")) {
+                        return 100
+                    } else {
+                        return 600
+                    }
+                }
+                easing.type: Easing.OutExpo
+            }
+        }
+
+        addDisplaced: Transition {
+            id: addDisplacedTrans
+            NumberAnimation { property: "y"; duration: 400; easing.type: Easing.OutQuart}
+            NumberAnimation { property: "opacity"; to: 1.0; duration: 600;  easing.type: Easing.OutExpo}
+            // NumberAnimation { property: "scale"; to: 1.0; duration: 300; easing.type: Easing.OutQuint}
+        }
+
+        removeDisplaced: Transition {
+            id: removeDisplacedTrans
+            NumberAnimation { properties: "y"; duration: 400; easing.type: Easing.OutQuart}
+            // NumberAnimation { property: "opacity"; to: 0; duration: 1000;  easing.type: Easing.OutExpo}
+            // NumberAnimation { property: "scale"; to: 0; duration: 3000; easing.type: Easing.OutQuint}
+        }
     }
 
     background: BoundingRectangle {}

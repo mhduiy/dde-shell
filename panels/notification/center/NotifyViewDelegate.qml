@@ -74,6 +74,7 @@ DelegateChooser {
             contentIcon: model.contentIcon
             contentRowCount: model.contentRowCount
             defaultAction: model.defaultAction
+            indexInGroup: model.indexInGroup
 
             Loader {
                 anchors.fill: parent
